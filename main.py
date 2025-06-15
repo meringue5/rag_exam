@@ -9,9 +9,6 @@ source code should follow the pipleline below:
 - Embedding & Vector Store: Use FAISS
 - Retriever: MultiQueryRetriever
   - Use "langchain.retrievers.multi_query" logger with INFO level.
-  - Parameters:
-    - search_type: "similarity_score_threshold"
-    - search_kwargs: {"score_threshold": 0.8}
   - Prompt template:
     You are an AI language model assistant. 
     Your task is to generate five different versions of the given user question to retrieve relevant documents from a vector database. 
@@ -79,11 +76,9 @@ llm_for_retriever = AzureChatOpenAI(
     api_key=AOAI_API_KEY,
     azure_endpoint=AOAI_ENDPOINT
 )
+
 retriever = MultiQueryRetriever.from_llm(
-    retriever=vectorstore.as_retriever(
-        search_type="similarity_score_threshold",
-        search_kwargs={"score_threshold": 0.8}
-    ),
+    retriever=vectorstore.as_retriever(),
     llm=llm_for_retriever,
     prompt=multi_query_prompt
 )
