@@ -53,17 +53,6 @@ AOAI_DEPLOY_EMBED_3_LARGE = os.getenv("AOAI_DEPLOY_EMBED_3_LARGE")
 loader = PyMuPDFLoader("joddal.pdf")
 docs = loader.load()
 
-# 2. Splitting: SemanticChunker
-llm_for_chunking = AzureChatOpenAI(
-    openai_api_version="2024-02-01",
-    azure_deployment=AOAI_DEPLOY_GPT4O_MINI,
-    temperature=0.0,
-    api_key=AOAI_API_KEY,
-    azure_endpoint=AOAI_ENDPOINT
-)
-chunker = SemanticChunker(llm_for_chunking)
-split_documents = chunker.split_documents(docs)
-
 # 3. Embedding & Vector Store: FAISS
 embeddings = AzureOpenAIEmbeddings(
     model=AOAI_DEPLOY_EMBED_3_LARGE,
@@ -71,6 +60,11 @@ embeddings = AzureOpenAIEmbeddings(
     api_key=AOAI_API_KEY,
     azure_endpoint=AOAI_ENDPOINT
 )
+
+# 2. Splitting: SemanticChunker
+chunker = SemanticChunker(embeddings)
+split_documents = chunker.split_documents(docs)
+
 vectorstore = FAISS.from_documents(documents=split_documents, embedding=embeddings)
 
 # 4. Retriever: MultiQueryRetriever
