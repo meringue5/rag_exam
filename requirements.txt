@@ -1,1 +1,8 @@
-
+langchain
+langchain-chroma
+langchain-community
+langchain-core
+langchain-experimental
+langchain-openai
+langchain-text-splitters
+scikit-learn
